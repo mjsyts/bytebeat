@@ -70,6 +70,25 @@ vector<Token> lex(const string &input)
             continue;
         }
 
+        // Multiply, exponent
+        if (c == '*')
+        {
+            TokenType type = TokenType::Multiply;
+            string buffer{c};
+            if (i < input.length())
+            {
+                c = input[i + 1];
+                if (c == '*')
+                {
+                    type = TokenType::Exponent;
+                    buffer.push_back(c);
+                    ++i;
+                }
+            }
+            tokens.push_back({type, buffer});
+            continue;
+        }
+
         // Less than, less than or equal, bitwise shift left
         if (c == '<')
         {
@@ -246,8 +265,6 @@ TokenType get_terminal_type(char c)
         return TokenType::Plus;
     case '-':
         return TokenType::Minus;
-    case '*':
-        return TokenType::Multiply;
     case '/':
         return TokenType::Divide;
     case '%':
